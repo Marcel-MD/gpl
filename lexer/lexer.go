@@ -8,7 +8,7 @@ type Lexer struct {
 	input           string
 	currentPosition int
 	nextPosition    int
-	char            byte
+	ch              byte
 }
 
 func New(input string) *Lexer {
@@ -19,29 +19,50 @@ func New(input string) *Lexer {
 
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
-	switch l.char {
+
+	l.skipWhitespace()
+
+	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.char)
+		tok = newToken(token.ASSIGN, l.ch)
 	case ';':
-		tok = newToken(token.SEMICOLON, l.char)
+		tok = newToken(token.SEMICOLON, l.ch)
 	case '(':
-		tok = newToken(token.LPAREN, l.char)
+		tok = newToken(token.LPAREN, l.ch)
 	case ')':
-		tok = newToken(token.RPAREN, l.char)
+		tok = newToken(token.RPAREN, l.ch)
 	case ',':
-		tok = newToken(token.COMMA, l.char)
+		tok = newToken(token.COMMA, l.ch)
 	case '+':
-		tok = newToken(token.PLUS, l.char)
+		tok = newToken(token.PLUS, l.ch)
 	case '{':
-		tok = newToken(token.LBRACE, l.char)
+		tok = newToken(token.LBRACE, l.ch)
 	case '}':
-		tok = newToken(token.RBRACE, l.char)
+		tok = newToken(token.RBRACE, l.ch)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
+	default:
+		if isLetter(l.ch) {
+			tok.Literal = l.readIdentifier()
+			tok.Type = token.LookupIdentifier(tok.Literal)
+			return tok
+		} else if isDigit(l.ch) {
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
+			return tok
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	}
 	l.readChar()
 	return tok
+}
+
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
 }
 
 func newToken(tokenType token.TokenType, ch byte) token.Token {
@@ -50,10 +71,34 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 
 func (l *Lexer) readChar() {
 	if l.nextPosition >= len(l.input) {
-		l.char = 0
+		l.ch = 0
 	} else {
-		l.char = l.input[l.nextPosition]
+		l.ch = l.input[l.nextPosition]
 	}
 	l.currentPosition = l.nextPosition
 	l.nextPosition++
+}
+
+func (l *Lexer) readIdentifier() string {
+	position := l.currentPosition
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.currentPosition]
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+func (l *Lexer) readNumber() string {
+	position := l.currentPosition
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.currentPosition]
+}
+
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }

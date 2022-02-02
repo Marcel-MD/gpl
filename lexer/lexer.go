@@ -24,21 +24,53 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		tok = newToken(token.ASSIGN, l.ch)
-	case ';':
-		tok = newToken(token.SEMICOLON, l.ch)
-	case '(':
-		tok = newToken(token.LPAREN, l.ch)
-	case ')':
-		tok = newToken(token.RPAREN, l.ch)
-	case ',':
-		tok = newToken(token.COMMA, l.ch)
+		if l.peekChar() == '=' {
+			tok.Literal = l.makeTwoCharLiteral()
+			tok.Type = token.EQ
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
+		}
 	case '+':
 		tok = newToken(token.PLUS, l.ch)
+	case '-':
+		tok = newToken(token.MINUS, l.ch)
+	case '!':
+		if l.peekChar() == '=' {
+			tok.Literal = l.makeTwoCharLiteral()
+			tok.Type = token.NOT_EQ
+		} else {
+			tok = newToken(token.BANG, l.ch)
+		}
+	case '/':
+		tok = newToken(token.SLASH, l.ch)
+	case '*':
+		tok = newToken(token.ASTERISK, l.ch)
+	case '<':
+		if l.peekChar() == '=' {
+			tok.Literal = l.makeTwoCharLiteral()
+			tok.Type = token.LOE
+		} else {
+			tok = newToken(token.LT, l.ch)
+		}
+	case '>':
+		if l.peekChar() == '=' {
+			tok.Literal = l.makeTwoCharLiteral()
+			tok.Type = token.GOE
+		} else {
+			tok = newToken(token.GT, l.ch)
+		}
+	case ';':
+		tok = newToken(token.SEMICOLON, l.ch)
+	case ',':
+		tok = newToken(token.COMMA, l.ch)
 	case '{':
 		tok = newToken(token.LBRACE, l.ch)
 	case '}':
 		tok = newToken(token.RBRACE, l.ch)
+	case '(':
+		tok = newToken(token.LPAREN, l.ch)
+	case ')':
+		tok = newToken(token.RPAREN, l.ch)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -68,6 +100,12 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
+func (l *Lexer) makeTwoCharLiteral() string {
+	ch := l.ch
+	l.readChar()
+	return string(ch) + string(l.ch)
+}
+
 func (l *Lexer) readChar() {
 	if l.nextPosition >= len(l.input) {
 		l.ch = 0
@@ -76,6 +114,14 @@ func (l *Lexer) readChar() {
 	}
 	l.currentPosition = l.nextPosition
 	l.nextPosition++
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.nextPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.nextPosition]
+	}
 }
 
 func (l *Lexer) readIdentifier() string {

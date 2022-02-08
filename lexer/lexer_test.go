@@ -33,7 +33,7 @@ while (pi <= 4) {
 	pi = pi + 0.1;
 }
 
-for(){}
+for(a || b && c){}
 
 pi >= 3;
 `
@@ -136,6 +136,11 @@ pi >= 3;
 		{token.RBRACE, "}"},
 		{token.FOR, "for"},
 		{token.LPAREN, "("},
+		{token.IDENT, "a"},
+		{token.OR, "||"},
+		{token.IDENT, "b"},
+		{token.AND, "&&"},
+		{token.IDENT, "c"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
 		{token.RBRACE, "}"},

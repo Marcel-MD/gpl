@@ -142,6 +142,7 @@ const (
 	// operator precedence
 	_ int = iota
 	LOWEST
+	AND         // && ||
 	EQUALS      // ==
 	LESSGREATER // > or < or => or <=
 	SUM         // +

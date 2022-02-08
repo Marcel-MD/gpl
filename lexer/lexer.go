@@ -59,6 +59,20 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok = newToken(token.GT, l.ch)
 		}
+	case '&':
+		if l.peekChar() == '&' {
+			tok.Literal = l.makeTwoCharLiteral()
+			tok.Type = token.AND
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
+	case '|':
+		if l.peekChar() == '|' {
+			tok.Literal = l.makeTwoCharLiteral()
+			tok.Type = token.OR
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
 	case ',':

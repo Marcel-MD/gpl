@@ -29,11 +29,11 @@ if (5 < 10) {
 
 let pi = 3.14;
 
-while (pi <= 4) {
+for (pi <= 4) {
 	pi = pi + 0.1;
 }
 
-for(a || b && c){}
+for (a || b && c) {}
 
 pi >= 3;
 `
@@ -120,7 +120,7 @@ pi >= 3;
 		{token.ASSIGN, "="},
 		{token.FLOAT, "3.14"},
 		{token.SEMICOLON, ";"},
-		{token.WHILE, "while"},
+		{token.FOR, "for"},
 		{token.LPAREN, "("},
 		{token.IDENT, "pi"},
 		{token.LOE, "<="},

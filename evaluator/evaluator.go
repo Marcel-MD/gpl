@@ -102,6 +102,12 @@ func evalInfixExpression(
 		return evalIntegerInfixExpression(operator, left, right)
 	case left.Type() == object.FLOAT_OBJ && right.Type() == object.FLOAT_OBJ:
 		return evalFloatInfixExpression(operator, left, right)
+	case left.Type() == object.FLOAT_OBJ && right.Type() == object.INTEGER_OBJ:
+		right = convertIntToFloat(right)
+		return evalFloatInfixExpression(operator, left, right)
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.FLOAT_OBJ:
+		left = convertIntToFloat(left)
+		return evalFloatInfixExpression(operator, left, right)
 	case left.Type() == object.BOOLEAN_OBJ && right.Type() == object.BOOLEAN_OBJ:
 		return evalBoolInfixExpression(operator, left, right)
 	case operator == "==":
@@ -111,6 +117,11 @@ func evalInfixExpression(
 	default:
 		return NULL
 	}
+}
+
+func convertIntToFloat(i object.Object) *object.Float {
+	f := &object.Float{Value: float64(i.(*object.Integer).Value)}
+	return f
 }
 
 func evalIntegerInfixExpression(

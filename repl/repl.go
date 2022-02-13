@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/Marcel-MD/gpl/evaluator"
 	"github.com/Marcel-MD/gpl/lexer"
 	"github.com/Marcel-MD/gpl/parser"
 )
@@ -13,7 +14,6 @@ const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
-
 	for {
 		fmt.Fprint(out, PROMPT)
 		scanned := scanner.Scan()
@@ -32,8 +32,12 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		io.WriteString(out, program.String())
-		io.WriteString(out, "\n")
+		evaluated := evaluator.Eval(program)
+
+		if evaluated != nil {
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out, "\n")
+		}
 	}
 }
 

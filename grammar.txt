@@ -28,7 +28,7 @@ P = {
     <map call> → <identifier>[ <literal> ]
 
     <identifier> → <letter><identifier>
-    <infix operator> → + | - | / | == | != | > | < | >= | <= | || | &&
+    <infix operator> → + | - | / | * | == | != | > | < | >= | <= | || | &&
     <prefix operator> → - | !
 
     <literal> → <string literal> | <boolean literal> | <integer literal> | <float literal>

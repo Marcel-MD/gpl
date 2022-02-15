@@ -1,0 +1,48 @@
+P = {
+    <program> → <statement> ; | <statement> ; <program>
+    <statement> → <let statement> | <return statement> | <expression statement>
+    
+    <let statement> → let <identifier> = <expression>
+    <return statement> → return <expression>
+    <expression statement> → <expression>
+
+    <expression> → <prefix expression> | <infix expression> | <if expression> | <for expression> | <identifier> 
+    | <literal> | <function> | <function call> | <array> | <array call> | <map> | <map call>
+
+    <prefix expression> → <prefix operator><expression>
+    <infix expression> → <expression> <infix operator> <expression>
+    <if expression> → if ( <expression> ) { <program> } | if ( <expression> ) { <program> } else { <program> }
+    <for expression> → for ( <expression> ) { <program> }
+
+    <function> → fn( <parameter> ) { <program> }
+    <parameter> → ε | <identifier> | <identifier> , <parameter>
+    <function call> → <identifier>( <argument> )
+    <argument> → ε | <expression> | <expression> , <argument>
+
+    <array> → [ <array element> ]
+    <array element> → ε | <expression> | <expression> , <array element>
+    <array call> → <identifier>[ <integer literal> ]
+
+    <map> → { <map element> }
+    <map element> → ε | <literal> : <expression> | <literal> : <expression> , <map element>
+    <map call> → <identifier>[ <literal> ]
+
+    <identifier> → <letter><identifier>
+    <infix operator> → + | - | / | == | != | > | < | >= | <= | || | &&
+    <prefix operator> → - | !
+
+    <literal> → <string literal> | <boolean literal> | <integer literal> | <float literal>
+    <boolean literal> → true | false
+    <integer literal> → <integer>
+    <float literal> → <float>
+    <string literal> → "<text>"
+
+    <integer> → <digit> | <digit><integer>
+    <float> → <integer>.<integer>
+    <text> → ε | <character> | <character><text>
+    <character> → <letter> | <symbol> | digit
+    
+    <digit> → 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+    <letter> → a | A | b | B | ... | z | Z
+    <symbol> → ! | @ | # | $ | % | ...
+}

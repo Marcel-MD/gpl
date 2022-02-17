@@ -7,6 +7,7 @@ import (
 
 	"github.com/Marcel-MD/gpl/evaluator"
 	"github.com/Marcel-MD/gpl/lexer"
+	"github.com/Marcel-MD/gpl/object"
 	"github.com/Marcel-MD/gpl/parser"
 )
 
@@ -14,6 +15,8 @@ const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
+
 	for {
 		fmt.Fprint(out, PROMPT)
 		scanned := scanner.Scan()
@@ -32,7 +35,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())

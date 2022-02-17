@@ -183,6 +183,26 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 	return true
 }
 
+func TestForExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"for (true) { return 10; }", 10},
+		{"let i = 0; for (i < 10) { let i = i + 1; if (i > 5) {return i;} }", 6},
+		{"for (false) { return 10; }", nil},
+	}
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			testNullObject(t, evaluated)
+		}
+	}
+}
+
 func TestReturnStatements(t *testing.T) {
 	tests := []struct {
 		input    string

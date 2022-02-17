@@ -63,6 +63,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalInfixExpression(node.Operator, left, right)
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
+	case *ast.ForExpression:
+		return evalForExpression(node, env)
 	}
 
 	return nil
@@ -321,6 +323,28 @@ func isTruthy(obj object.Object) bool {
 		}
 		return true
 	}
+}
+
+func evalForExpression(fe *ast.ForExpression, env *object.Environment) object.Object {
+	rt := NULL
+	for {
+		condition := Eval(fe.Condition, env)
+		if isError(condition) {
+			return condition
+		}
+		if isTruthy(condition) {
+			rt := Eval(fe.Block, env)
+
+			if rt != nil {
+				if rt.Type() == object.RETURN_VALUE_OBJ || rt.Type() == object.ERROR_OBJ {
+					return rt
+				}
+			}
+		} else {
+			break
+		}
+	}
+	return rt
 }
 
 func evalIdentifier(

@@ -12,4 +12,6 @@ Work in progress ...
 
 To run the REPL type `go run .` in the root folder.
 
+To execute a file type `go run . <file path>`.
+
 To run the tests type `go test ./<folder>`.

@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 
 	"github.com/Marcel-MD/gpl/evaluator"
 	"github.com/Marcel-MD/gpl/lexer"
@@ -41,6 +43,31 @@ func Start(in io.Reader, out io.Writer) {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")
 		}
+	}
+}
+
+func ExecuteFile(path string, out io.Writer) {
+	content, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	code := string(content)
+	l := lexer.New(code)
+	p := parser.New(l)
+	program := p.ParseProgram()
+
+	if len(p.Errors()) != 0 {
+		printParserErrors(out, p.Errors())
+		return
+	}
+
+	env := object.NewEnvironment()
+	evaluated := evaluator.Eval(program, env)
+
+	if evaluated != nil {
+		io.WriteString(out, evaluated.Inspect())
+		io.WriteString(out, "\n")
 	}
 }
 

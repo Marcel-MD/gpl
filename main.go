@@ -9,6 +9,13 @@ import (
 )
 
 func main() {
+
+	if len(os.Args) > 1 {
+		path := os.Args[1]
+		repl.ExecuteFile(path, os.Stdout)
+		return
+	}
+
 	user, err := user.Current()
 	if err != nil {
 		panic(err)

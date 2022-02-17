@@ -44,6 +44,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
+	p.registerInfix(token.ASSIGN, p.parseAssignExpression)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
 	p.registerInfix(token.SLASH, p.parseInfixExpression)
@@ -167,6 +168,7 @@ const (
 	_ int = iota
 	LOWEST
 	AND         // && ||
+	ASSIGN      // =
 	EQUALS      // ==
 	LESSGREATER // > or < or => or <=
 	SUM         // +
@@ -178,6 +180,7 @@ const (
 var precedences = map[token.TokenType]int{
 	token.OR:       AND,
 	token.AND:      AND,
+	token.ASSIGN:   ASSIGN,
 	token.EQ:       EQUALS,
 	token.NOT_EQ:   EQUALS,
 	token.LT:       LESSGREATER,
@@ -309,6 +312,23 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	p.nextToken()
 	expression.Right = p.parseExpression(precedence)
 	return expression
+}
+
+func (p *Parser) parseAssignExpression(name ast.Expression) ast.Expression {
+	stmt := &ast.AssignExpression{Token: p.currentToken}
+
+	if n, ok := name.(*ast.Identifier); ok {
+		stmt.Name = n
+	} else {
+		msg := fmt.Sprintf("expected assign token to be IDENT, got %s instead", name.TokenLiteral())
+		p.errors = append(p.errors, msg)
+	}
+
+	p.nextToken()
+
+	stmt.Operator = "="
+	stmt.Value = p.parseExpression(LOWEST)
+	return stmt
 }
 
 func (p *Parser) parseGroupedExpression() ast.Expression {

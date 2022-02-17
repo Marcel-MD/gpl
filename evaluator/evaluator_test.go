@@ -189,7 +189,7 @@ func TestForExpressions(t *testing.T) {
 		expected interface{}
 	}{
 		{"for (true) { return 10; }", 10},
-		{"let i = 0; for (i < 10) { let i = i + 1; if (i > 5) {return i;} }", 6},
+		{"let i = 0; for (i < 10) { i = i + 1; if (i > 5) {return i;} }", 6},
 		{"for (false) { return 10; }", nil},
 	}
 	for _, tt := range tests {
@@ -295,6 +295,7 @@ func TestLetStatements(t *testing.T) {
 		{"let a = 5 * 5; a;", 25},
 		{"let a = 5; let b = a; b;", 5},
 		{"let a = 5; let b = a; let c = a + b + 5; c;", 15},
+		{"a = 1; a = a + 1; a;", 2},
 	}
 	for _, tt := range tests {
 		testIntegerObject(t, testEval(tt.input), tt.expected)

@@ -90,36 +90,11 @@ func (p *Parser) ParseProgram() *ast.Program {
 
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.currentToken.Type {
-	case token.LET:
-		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
-}
-
-func (p *Parser) parseLetStatement() *ast.LetStatement {
-	stmt := &ast.LetStatement{Token: p.currentToken}
-
-	if !p.expectPeek(token.IDENT) {
-		return nil
-	}
-
-	stmt.Name = &ast.Identifier{Token: p.currentToken, Value: p.currentToken.Literal}
-
-	if !p.expectPeek(token.ASSIGN) {
-		return nil
-	}
-
-	p.nextToken()
-	stmt.Value = p.parseExpression(LOWEST)
-
-	if p.peekTokenIs(token.SEMICOLON) {
-		p.nextToken()
-	}
-
-	return stmt
 }
 
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {

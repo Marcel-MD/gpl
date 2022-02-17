@@ -1,8 +1,7 @@
 P = {
     <program> → <statement> ; | <statement> ; <program>
-    <statement> → <let statement> | <return statement> | <expression statement>
-    
-    <let statement> → let <identifier> = <expression>
+    <statement> → <return statement> | <expression statement>
+
     <return statement> → return <expression>
     <expression statement> → <expression>
 
@@ -10,7 +9,7 @@ P = {
     | <literal> | <function> | <function call> | <array> | <array call> | <map> | <map call>
 
     <prefix expression> → <prefix operator><expression>
-    <infix expression> → <expression> <infix operator> <expression>
+    <infix expression> → <expression> <infix operator> <expression> | <identifier> <assignment operator> <expression>
     <if expression> → if ( <expression> ) { <program> } | if ( <expression> ) { <program> } else { <program> }
     <for expression> → for ( <expression> ) { <program> }
 
@@ -30,6 +29,7 @@ P = {
     <identifier> → <letter><identifier>
     <infix operator> → + | - | / | * | == | != | > | < | >= | <= | || | &&
     <prefix operator> → - | !
+    <assignment operator> → =
 
     <literal> → <string literal> | <boolean literal> | <integer literal> | <float literal>
     <boolean literal> → true | false

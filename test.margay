@@ -10,4 +10,15 @@ pow = fn(x, n) {
     return p;
 }
 
-return pow(2, 3);
+p = pow(2, 3);
+
+
+
+add = fn(x) {
+    fn(y) { x + y }
+}
+
+addTwo = add(2);
+s = addTwo(3);
+
+return s;

@@ -39,6 +39,7 @@ pi >= 3;
 
 "foobar"
 "foo bar"
+[1, 2];
 `
 
 	tests := []struct {
@@ -148,6 +149,12 @@ pi >= 3;
 		{token.SEMICOLON, ";"},
 		{token.STRING, "foobar"},
 		{token.STRING, "foo bar"},
+		{token.LBRACKET, "["},
+		{token.INT, "1"},
+		{token.COMMA, ","},
+		{token.INT, "2"},
+		{token.RBRACKET, "]"},
+		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
 

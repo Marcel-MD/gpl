@@ -38,11 +38,6 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 
-	MINUS_EQ    = "-="
-	PLUS_EQ     = "+="
-	ASTERISK_EQ = "*="
-	SLASH_EQ    = "/="
-
 	AND = "&&"
 	OR  = "||"
 

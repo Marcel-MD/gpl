@@ -61,19 +61,9 @@ func (l *Lexer) NextToken() token.Token {
 			t = token.New(token.ILLEGAL, "|")
 		}
 	case '-':
-		if l.peekChar() == '=' {
-			t = token.New(token.MINUS_EQ, "-=")
-			l.movePosition()
-		} else {
-			t = token.New(token.MINUS, "-")
-		}
+		t = token.New(token.MINUS, "-")
 	case '+':
-		if l.peekChar() == '=' {
-			t = token.New(token.PLUS_EQ, "+=")
-			l.movePosition()
-		} else {
-			t = token.New(token.PLUS, "+")
-		}
+		t = token.New(token.PLUS, "+")
 	case '>':
 		if l.peekChar() == '=' {
 			t = token.New(token.GOE, ">=")
@@ -89,19 +79,9 @@ func (l *Lexer) NextToken() token.Token {
 			t = token.New(token.LT, "<")
 		}
 	case '*':
-		if l.peekChar() == '=' {
-			t = token.New(token.ASTERISK_EQ, "*=")
-			l.movePosition()
-		} else {
-			t = token.New(token.ASTERISK, "*")
-		}
+		t = token.New(token.ASTERISK, "*")
 	case '/':
-		if l.peekChar() == '=' {
-			t = token.New(token.SLASH_EQ, "/=")
-			l.movePosition()
-		} else {
-			t = token.New(token.SLASH, "/")
-		}
+		t = token.New(token.SLASH, "/")
 	case ',':
 		t = token.New(token.COMMA, ",")
 	case ';':

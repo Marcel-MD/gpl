@@ -7,14 +7,19 @@ type Token struct {
 	Literal string
 }
 
+func New(tokenType TokenType, literal string) Token {
+	return Token{Type: tokenType, Literal: literal}
+}
+
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
 	// Identifiers
-	IDENT = "IDENT" // add, foobar, x, y, ...
-	INT   = "INT"
-	FLOAT = "FLOAT"
+	IDENT  = "IDENT"
+	INT    = "INT"
+	FLOAT  = "FLOAT"
+	STRING = "STRING"
 
 	// Operators
 	ASSIGN   = "="
@@ -32,6 +37,11 @@ const (
 
 	EQ     = "=="
 	NOT_EQ = "!="
+
+	MINUS_EQ    = "-="
+	PLUS_EQ     = "+="
+	ASTERISK_EQ = "*="
+	SLASH_EQ    = "/="
 
 	AND = "&&"
 	OR  = "||"
@@ -63,6 +73,13 @@ var keywords = map[string]TokenType{
 	"else":   ELSE,
 	"return": RETURN,
 	"for":    FOR,
+}
+
+func GetKeywordToken(word string) Token {
+	if tok, ok := keywords[word]; ok {
+		return New(tok, word)
+	}
+	return New(IDENT, word)
 }
 
 func LookupIdentifier(ident string) TokenType {

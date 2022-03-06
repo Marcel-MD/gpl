@@ -36,6 +36,9 @@ for (pi <= 4) {
 for (a || b && c) {}
 
 pi >= 3;
+
+"foobar"
+"foo bar"
 `
 
 	tests := []struct {
@@ -143,6 +146,8 @@ pi >= 3;
 		{token.GOE, ">="},
 		{token.INT, "3"},
 		{token.SEMICOLON, ";"},
+		{token.STRING, "foobar"},
+		{token.STRING, "foo bar"},
 		{token.EOF, ""},
 	}
 

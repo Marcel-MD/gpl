@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/Marcel-MD/gpl/ast"
 	"github.com/Marcel-MD/gpl/object"
@@ -43,6 +44,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return &object.Integer{Value: node.Value}
 	case *ast.FloatLiteral:
 		return &object.Float{Value: node.Value}
+	case *ast.StringLiteral:
+		return &object.String{Value: node.Value}
 	case *ast.Boolean:
 		return nativeBoolToBooleanObject(node.Value)
 	case *ast.PrefixExpression:
@@ -197,6 +200,26 @@ func evalInfixExpression(
 		return evalFloatInfixExpression(operator, left, right)
 	case left.Type() == object.BOOLEAN_OBJ && right.Type() == object.BOOLEAN_OBJ:
 		return evalBoolInfixExpression(operator, left, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.INTEGER_OBJ:
+		right = convertIntToString(right)
+		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.STRING_OBJ:
+		left = convertIntToString(left)
+		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.FLOAT_OBJ:
+		right = convertFloatToString(right)
+		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.FLOAT_OBJ && right.Type() == object.STRING_OBJ:
+		left = convertFloatToString(left)
+		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.BOOLEAN_OBJ:
+		right = convertBoolToString(right)
+		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.BOOLEAN_OBJ && right.Type() == object.STRING_OBJ:
+		left = convertBoolToString(left)
+		return evalStringInfixExpression(operator, left, right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
@@ -213,6 +236,21 @@ func evalInfixExpression(
 func convertIntToFloat(i object.Object) *object.Float {
 	f := &object.Float{Value: float64(i.(*object.Integer).Value)}
 	return f
+}
+
+func convertIntToString(i object.Object) *object.String {
+	s := &object.String{Value: strconv.Itoa(int(i.(*object.Integer).Value))}
+	return s
+}
+
+func convertFloatToString(i object.Object) *object.String {
+	s := &object.String{Value: strconv.FormatFloat(i.(*object.Float).Value, 'E', -1, 64)}
+	return s
+}
+
+func convertBoolToString(i object.Object) *object.String {
+	s := &object.String{Value: strconv.FormatBool(i.(*object.Boolean).Value)}
+	return s
 }
 
 func evalIntegerInfixExpression(
@@ -273,6 +311,34 @@ func evalFloatInfixExpression(
 		return nativeBoolToBooleanObject(leftVal == rightVal)
 	case "!=":
 		return nativeBoolToBooleanObject(leftVal != rightVal)
+	case "<=":
+		return nativeBoolToBooleanObject(leftVal <= rightVal)
+	case ">=":
+		return nativeBoolToBooleanObject(leftVal >= rightVal)
+	default:
+		return newError("unknown operator: %s %s %s",
+			left.Type(), operator, right.Type())
+	}
+}
+
+func evalStringInfixExpression(
+	operator string,
+	left, right object.Object,
+) object.Object {
+	leftVal := left.(*object.String).Value
+	rightVal := right.(*object.String).Value
+
+	switch operator {
+	case "+":
+		return &object.String{Value: leftVal + rightVal}
+	case "==":
+		return nativeBoolToBooleanObject(leftVal == rightVal)
+	case "!=":
+		return nativeBoolToBooleanObject(leftVal != rightVal)
+	case "<":
+		return nativeBoolToBooleanObject(leftVal < rightVal)
+	case ">":
+		return nativeBoolToBooleanObject(leftVal > rightVal)
 	case "<=":
 		return nativeBoolToBooleanObject(leftVal <= rightVal)
 	case ">=":

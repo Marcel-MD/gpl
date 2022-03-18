@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"strings"
+
 	"github.com/Marcel-MD/gpl/token"
 )
 
@@ -156,7 +158,11 @@ func (l *Lexer) readString() token.Token {
 		ch = l.currentChar()
 	}
 
-	return token.New(token.STRING, l.input[start:l.currentPosition])
+	str := l.input[start:l.currentPosition]
+
+	str = strings.Replace(str, "\\n", "\n", -1)
+
+	return token.New(token.STRING, str)
 }
 
 func (l *Lexer) readWord() token.Token {

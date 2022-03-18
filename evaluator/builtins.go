@@ -1,6 +1,13 @@
 package evaluator
 
-import "github.com/Marcel-MD/gpl/object"
+import (
+	"bufio"
+	"fmt"
+	"io/ioutil"
+	"os"
+
+	"github.com/Marcel-MD/gpl/object"
+)
 
 var builtins = map[string]*object.Builtin{
 	"len": {
@@ -97,6 +104,61 @@ var builtins = map[string]*object.Builtin{
 			newArr[index] = args[1]
 
 			return &object.Array{Elements: newArr}
+		},
+	},
+	"write": {
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Print(arg.Inspect())
+			}
+			return NULL
+		},
+	},
+	"writef": {
+		Fn: func(args ...object.Object) object.Object {
+			if args[0].Type() != object.STRING_OBJ {
+				return newError("file path not string, got %s",
+					args[0].Type())
+			}
+
+			str := ""
+			for i := 1; i < len(args); i++ {
+				str = str + fmt.Sprint(args[i].Inspect())
+			}
+
+			data := []byte(str)
+			err := os.WriteFile(args[0].(*object.String).Value, data, 0644)
+
+			if err != nil {
+				return newError(err.Error())
+			}
+
+			return NULL
+		},
+	},
+	"read": {
+		Fn: func(args ...object.Object) object.Object {
+
+			scanner := bufio.NewScanner(os.Stdin)
+			scanner.Scan()
+
+			return &object.String{Value: scanner.Text()}
+		},
+	},
+	"readf": {
+		Fn: func(args ...object.Object) object.Object {
+			if args[0].Type() != object.STRING_OBJ {
+				return newError("file path not string, got %s",
+					args[0].Type())
+			}
+
+			content, err := ioutil.ReadFile(args[0].(*object.String).Value)
+
+			if err != nil {
+				return newError(err.Error())
+			}
+
+			return &object.String{Value: string(content)}
 		},
 	},
 }

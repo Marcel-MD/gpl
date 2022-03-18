@@ -1,0 +1,3 @@
+write("What is your name?\n");
+name = read();
+write("Hello ", name, "! Have fun with Margay :)\n");

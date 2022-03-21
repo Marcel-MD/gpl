@@ -63,12 +63,7 @@ func ExecuteFile(path string, out io.Writer) {
 	}
 
 	env := object.NewEnvironment()
-	evaluated := evaluator.Eval(program, env)
-
-	if evaluated != nil {
-		io.WriteString(out, evaluated.Inspect())
-		io.WriteString(out, "\n")
-	}
+	evaluator.Eval(program, env)
 }
 
 func printParserErrors(out io.Writer, errors []string) {

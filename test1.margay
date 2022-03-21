@@ -19,4 +19,4 @@ powThree = getPower(3);
 b = powTwo(5);
 a = powThree(2);
 
-return b + a * a;
+write(b + a * a);

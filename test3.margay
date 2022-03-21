@@ -1,3 +1,32 @@
-write("What is your name?\n");
-name = read();
-write("Hello ", name, "! Have fun with Margay :)\n");
+write("\nWelcome to Guessing Game written in Margay!\n");
+win = 69;
+attempts = 5;
+game = false;
+
+write("\nGive me a number from 0 to 100 -> ");
+
+for (attempts > 0) {
+    
+    n = read();
+    
+    if (n == win) {
+        game = true;
+        attempts = 0;
+    }
+
+    if (n < win) {
+        write("\nGuess higher -> ");
+    }
+    
+    if (n > win) {
+        write("\nGuess lower -> ");
+    }
+
+    attempts = attempts - 1;
+}
+
+if (game) {
+    write("\nGuessed the number! You won!");
+} else {
+    write("\nNo attempts left! You lost!");
+}

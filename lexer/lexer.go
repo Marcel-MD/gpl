@@ -147,6 +147,13 @@ func (l *Lexer) skipWhitespace() {
 		l.movePosition()
 		ch = l.currentChar()
 	}
+	if ch == '/' && l.peekChar() == '/' {
+		for ch != '\n' && ch != 0 {
+			l.movePosition()
+			ch = l.currentChar()
+		}
+		l.skipWhitespace()
+	}
 }
 
 func (l *Lexer) readString() token.Token {

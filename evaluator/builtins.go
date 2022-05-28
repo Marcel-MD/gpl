@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/Marcel-MD/gpl/object"
@@ -15,7 +16,7 @@ var builtins = map[string]*object.Builtin{
 	"len": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return newError("wrong number of arguments to `len`. got=%d, want=1",
 					len(args))
 			}
 
@@ -33,7 +34,7 @@ var builtins = map[string]*object.Builtin{
 	"pop": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 && len(args) != 2 {
-				return newError("wrong number of arguments. got=%d, want=1 | 2",
+				return newError("wrong number of arguments to `pop`. got=%d, want=1 | 2",
 					len(args))
 			}
 
@@ -74,7 +75,7 @@ var builtins = map[string]*object.Builtin{
 		Fn: func(args ...object.Object) object.Object {
 
 			if len(args) != 2 && len(args) != 3 {
-				return newError("wrong number of arguments. got=%d, want=2 | 3",
+				return newError("wrong number of arguments to `push`. got=%d, want=2 | 3",
 					len(args))
 			}
 
@@ -166,7 +167,7 @@ var builtins = map[string]*object.Builtin{
 	"rand": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return newError("wrong number of arguments to `rand`. got=%d, want=1",
 					len(args))
 			}
 
@@ -186,6 +187,34 @@ var builtins = map[string]*object.Builtin{
 				return &object.Float{Value: r.Float64() * arg.Value}
 			default:
 				return newError("argument to `rand` not supported, got %s",
+					args[0].Type())
+			}
+		},
+	},
+	"int": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, want=1",
+					len(args))
+			}
+
+			switch arg := args[0].(type) {
+			case *object.String:
+				i, err := strconv.ParseInt(arg.Value, 0, 64)
+				if err != nil {
+					return newError("bad argument to `int`, got %s", arg.Value)
+				}
+				return &object.Integer{Value: i}
+			case *object.Float:
+				return &object.Integer{Value: int64(arg.Value)}
+			case *object.Boolean:
+				i := 0
+				if arg.Value {
+					i = 1
+				}
+				return &object.Integer{Value: int64(i)}
+			default:
+				return newError("argument to `len` not supported, got %s",
 					args[0].Type())
 			}
 		},

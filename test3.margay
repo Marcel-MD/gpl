@@ -7,7 +7,7 @@ write("\nGive me a number from 0 to 100 -> ");
 
 for (attempts > 0) {
     
-    n = read();
+    n = int(read());
     
     if (n == win) {
         game = true;

@@ -194,7 +194,7 @@ var builtins = map[string]*object.Builtin{
 	"int": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return newError("wrong number of arguments to `int`. got=%d, want=1",
 					len(args))
 			}
 
@@ -222,7 +222,7 @@ var builtins = map[string]*object.Builtin{
 	"float": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return newError("wrong number of arguments to `float`. got=%d, want=1",
 					len(args))
 			}
 
@@ -237,6 +237,30 @@ var builtins = map[string]*object.Builtin{
 				return &object.Float{Value: float64(arg.Value)}
 			default:
 				return newError("argument to `float` not supported, got %s",
+					args[0].Type())
+			}
+		},
+	},
+	"str": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments to `str`. got=%d, want=1",
+					len(args))
+			}
+
+			switch arg := args[0].(type) {
+			case *object.Integer:
+				return &object.String{Value: fmt.Sprintf("%d", arg.Value)}
+			case *object.Float:
+				return &object.String{Value: fmt.Sprintf("%f", arg.Value)}
+			case *object.Boolean:
+				s := "false"
+				if arg.Value {
+					s = "true"
+				}
+				return &object.String{Value: s}
+			default:
+				return newError("argument to `str` not supported, got %s",
 					args[0].Type())
 			}
 		},

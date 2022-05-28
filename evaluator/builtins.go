@@ -214,7 +214,29 @@ var builtins = map[string]*object.Builtin{
 				}
 				return &object.Integer{Value: int64(i)}
 			default:
-				return newError("argument to `len` not supported, got %s",
+				return newError("argument to `int` not supported, got %s",
+					args[0].Type())
+			}
+		},
+	},
+	"float": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, want=1",
+					len(args))
+			}
+
+			switch arg := args[0].(type) {
+			case *object.String:
+				f, err := strconv.ParseFloat(arg.Value, 64)
+				if err != nil {
+					return newError("bad argument to `float`, got %s", arg.Value)
+				}
+				return &object.Float{Value: f}
+			case *object.Integer:
+				return &object.Float{Value: float64(arg.Value)}
+			default:
+				return newError("argument to `float` not supported, got %s",
 					args[0].Type())
 			}
 		},

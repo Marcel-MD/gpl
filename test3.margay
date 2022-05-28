@@ -1,5 +1,5 @@
 write("\nWelcome to Guessing Game written in Margay!\n");
-win = 69;
+win = rand(101);
 attempts = 5;
 game = false;
 
@@ -26,7 +26,7 @@ for (attempts > 0) {
 }
 
 if (game) {
-    write("\nGuessed the number! You won!");
+    write("\nGuessed the number! You won!\n");
 } else {
-    write("\nNo attempts left! You lost!");
+    write("\n\nNo attempts left! You lost!\n");
 }

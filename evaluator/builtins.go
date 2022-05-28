@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
+	"time"
 
 	"github.com/Marcel-MD/gpl/object"
 )
@@ -159,6 +161,33 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			return &object.String{Value: string(content)}
+		},
+	},
+	"rand": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, want=1",
+					len(args))
+			}
+
+			seed := rand.NewSource(time.Now().UnixNano())
+			r := rand.New(seed)
+
+			switch arg := args[0].(type) {
+			case *object.Integer:
+				if arg.Value < 1 {
+					return newError("argument to `rand` should be bigger equal or greater than 1")
+				}
+				return &object.Integer{Value: r.Int63n(arg.Value)}
+			case *object.Float:
+				if arg.Value < 1 {
+					return newError("argument to `rand` should be bigger equal or greater than 1")
+				}
+				return &object.Float{Value: r.Float64() * arg.Value}
+			default:
+				return newError("argument to `rand` not supported, got %s",
+					args[0].Type())
+			}
 		},
 	},
 }

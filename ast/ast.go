@@ -2,10 +2,19 @@ package ast
 
 import (
 	"bytes"
-	"strings"
 
 	"github.com/Marcel-MD/gpl/token"
 )
+
+var tab int = 0
+
+func printTab() string {
+	var out bytes.Buffer
+	for i := 0; i < tab; i++ {
+		out.WriteString("  ")
+	}
+	return out.String()
+}
 
 type Expression interface {
 	TokenLiteral() string
@@ -23,11 +32,21 @@ func (p *Program) TokenLiteral() string {
 		return ""
 	}
 }
+
 func (p *Program) String() string {
 	var out bytes.Buffer
+	out.WriteString("{\n")
+	tab++
+	out.WriteString(printTab() + "type: PROGRAM\n")
+	out.WriteString(printTab() + "statements: [\n")
+	tab++
 	for _, s := range p.Statements {
-		out.WriteString(s.String())
+		out.WriteString(printTab() + s.String())
 	}
+	tab--
+	out.WriteString(printTab() + "]\n")
+	tab--
+	out.WriteString("}\n")
 	return out.String()
 }
 
@@ -37,13 +56,14 @@ type ReturnStatement struct {
 }
 
 func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
-func (rs *ReturnStatement) String() string {
+func (s *ReturnStatement) String() string {
 	var out bytes.Buffer
-	out.WriteString(rs.TokenLiteral() + " ")
-	if rs.Value != nil {
-		out.WriteString(rs.Value.String())
-	}
-	out.WriteString(";")
+	out.WriteString("{\n")
+	tab++
+	out.WriteString(printTab() + "type: " + string(s.Token.Type) + "\n")
+	out.WriteString(printTab() + "value: " + s.Value.String())
+	tab--
+	out.WriteString(printTab() + "}\n")
 	return out.String()
 }
 
@@ -53,11 +73,8 @@ type ExpressionStatement struct {
 }
 
 func (es *ExpressionStatement) TokenLiteral() string { return es.Token.Literal }
-func (es *ExpressionStatement) String() string {
-	if es.Value != nil {
-		return es.Value.String()
-	}
-	return ""
+func (s *ExpressionStatement) String() string {
+	return s.Value.String()
 }
 
 type Identifier struct {
@@ -66,117 +83,14 @@ type Identifier struct {
 }
 
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
-func (i *Identifier) String() string       { return i.Value }
-
-type IntegerLiteral struct {
-	Token token.Token
-	Value int64
-}
-
-func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
-func (il *IntegerLiteral) String() string       { return il.Token.Literal }
-
-type FloatLiteral struct {
-	Token token.Token
-	Value float64
-}
-
-func (fl *FloatLiteral) TokenLiteral() string { return fl.Token.Literal }
-func (fl *FloatLiteral) String() string       { return fl.Token.Literal }
-
-type PrefixExpression struct {
-	Token    token.Token // Prefix token ! -
-	Operator string
-	Right    Expression
-}
-
-func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
-func (pe *PrefixExpression) String() string {
+func (i *Identifier) String() string {
 	var out bytes.Buffer
-	out.WriteString("(")
-	out.WriteString(pe.Operator)
-	out.WriteString(pe.Right.String())
-	out.WriteString(")")
-	return out.String()
-}
-
-type InfixExpression struct {
-	Token    token.Token // Operator token + * /
-	Left     Expression
-	Operator string
-	Right    Expression
-}
-
-func (ie *InfixExpression) TokenLiteral() string { return ie.Token.Literal }
-func (ie *InfixExpression) String() string {
-	var out bytes.Buffer
-	out.WriteString("(")
-	out.WriteString(ie.Left.String())
-	out.WriteString(" " + ie.Operator + " ")
-	out.WriteString(ie.Right.String())
-	out.WriteString(")")
-	return out.String()
-}
-
-type AssignExpression struct {
-	Token    token.Token
-	Name     *Identifier
-	Operator string
-	Value    Expression
-}
-
-func (as *AssignExpression) TokenLiteral() string { return as.Token.Literal }
-func (as *AssignExpression) String() string {
-	var out bytes.Buffer
-	out.WriteString(as.Name.String())
-	out.WriteString(as.Operator)
-	out.WriteString(as.Value.String())
-	return out.String()
-}
-
-type Boolean struct {
-	Token token.Token
-	Value bool
-}
-
-func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
-func (b *Boolean) String() string       { return b.Token.Literal }
-
-type IfExpression struct {
-	Token       token.Token // The 'if' token
-	Condition   Expression
-	Consequence *BlockStatement
-	Alternative *BlockStatement
-}
-
-func (ie *IfExpression) TokenLiteral() string { return ie.Token.Literal }
-func (ie *IfExpression) String() string {
-	var out bytes.Buffer
-	out.WriteString("if")
-	out.WriteString(ie.Condition.String())
-	out.WriteString(" ")
-	out.WriteString(ie.Consequence.String())
-	if ie.Alternative != nil {
-
-		out.WriteString("else ")
-		out.WriteString(ie.Alternative.String())
-	}
-	return out.String()
-}
-
-type ForExpression struct {
-	Token     token.Token // for token
-	Condition Expression
-	Block     *BlockStatement
-}
-
-func (ie *ForExpression) TokenLiteral() string { return ie.Token.Literal }
-func (ie *ForExpression) String() string {
-	var out bytes.Buffer
-	out.WriteString("for")
-	out.WriteString(ie.Condition.String())
-	out.WriteString(" ")
-	out.WriteString(ie.Block.String())
+	out.WriteString("{\n")
+	tab++
+	out.WriteString(printTab() + "type: " + string(i.Token.Type) + "\n")
+	out.WriteString(printTab() + "value: " + i.Value + "\n")
+	tab--
+	out.WriteString(printTab() + "}\n")
 	return out.String()
 }
 
@@ -186,94 +100,19 @@ type BlockStatement struct {
 }
 
 func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
-func (bs *BlockStatement) String() string {
+func (b *BlockStatement) String() string {
 	var out bytes.Buffer
-	for _, s := range bs.Statements {
-		out.WriteString(s.String())
+	out.WriteString("{\n")
+	tab++
+	out.WriteString(printTab() + "type: BLOCK\n")
+	out.WriteString(printTab() + "statements: [\n")
+	tab++
+	for _, s := range b.Statements {
+		out.WriteString(printTab() + s.String())
 	}
-	return out.String()
-}
-
-type FunctionLiteral struct {
-	Token      token.Token // The 'fn' token
-	Parameters []*Identifier
-	Body       *BlockStatement
-}
-
-func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
-func (fl *FunctionLiteral) String() string {
-	var out bytes.Buffer
-	params := []string{}
-	for _, p := range fl.Parameters {
-		params = append(params, p.String())
-	}
-	out.WriteString(fl.TokenLiteral())
-	out.WriteString("(")
-	out.WriteString(strings.Join(params, ", "))
-	out.WriteString(") ")
-	out.WriteString(fl.Body.String())
-	return out.String()
-}
-
-type CallExpression struct {
-	Token     token.Token // The '(' token
-	Function  Expression  // Identifier or FunctionLiteral
-	Arguments []Expression
-}
-
-func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
-func (ce *CallExpression) String() string {
-	var out bytes.Buffer
-	args := []string{}
-	for _, a := range ce.Arguments {
-		args = append(args, a.String())
-	}
-	out.WriteString(ce.Function.String())
-	out.WriteString("(")
-	out.WriteString(strings.Join(args, ", "))
-	out.WriteString(")")
-	return out.String()
-}
-
-type StringLiteral struct {
-	Token token.Token
-	Value string
-}
-
-func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
-func (sl *StringLiteral) String() string       { return sl.Token.Literal }
-
-type ArrayLiteral struct {
-	Token    token.Token // the '[' token
-	Elements []Expression
-}
-
-func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
-func (al *ArrayLiteral) String() string {
-	var out bytes.Buffer
-	elements := []string{}
-	for _, el := range al.Elements {
-		elements = append(elements, el.String())
-	}
-	out.WriteString("[")
-	out.WriteString(strings.Join(elements, ", "))
-	out.WriteString("]")
-	return out.String()
-}
-
-type IndexExpression struct {
-	Token token.Token // The [ token
-	Left  Expression
-	Index Expression
-}
-
-func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
-func (ie *IndexExpression) String() string {
-	var out bytes.Buffer
-	out.WriteString("(")
-	out.WriteString(ie.Left.String())
-	out.WriteString("[")
-	out.WriteString(ie.Index.String())
-	out.WriteString("])")
+	tab--
+	out.WriteString(printTab() + "]\n")
+	tab--
+	out.WriteString(printTab() + "}\n")
 	return out.String()
 }

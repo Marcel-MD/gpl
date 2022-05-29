@@ -14,4 +14,4 @@ To run the REPL type `go run .` in the root folder.
 
 To execute a file type `go run . <file path>`.
 
-To run the tests type `go test ./<folder>`.
+To see the Abstract Syntax Tree type `go run . <file path> -t`.

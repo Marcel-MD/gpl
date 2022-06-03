@@ -1,0 +1,89 @@
+// Find where is the Margay!
+
+write("\nHello! We lost our little Margay... T.T")
+write("\nCould you please help us find it?")
+write("\nHe must be in the house, mountains or woods ...")
+write("
+    .                  .-.    .  _   *     _   .
+           *          /   \     ((       _/ \       *    .
+         _    .   .--'\/\_ \     `      /    \  *    ___
+     *  / \_    _/ ^      \/\'__        /\/\  /\  __/   \ *
+       /    \  /    .'   _/  /  \  *' /    \/  \/ .`'\_/\   .
+  .   /\/\  /\/ :' __  ^/  ^/    `--./.'  ^  `-.\ _    _:\ _
+     /    \/  \  _/  \-' __/.' ^ _   \_   .'\   _/ \ .  __/ \
+   /\  .-   `. \/     \ / -.   _/ \ -. `_/   \ /    `._/  ^  \
+  /  `-.__ ^   / .-'.--'    . /    `--./ .-'  `-.  `-. `.  -  `.
+@/        `.  / /      `-.   /  .-'   / .   .'   \    \  \  .-  \%")
+write("
+     '
+     ''                                         ,@@@@@@@,
+      ':.                               ,,,.   ,@@@@@@/@@,  .oo8888o.
+         []_____                   ,%&\%&&%&&%,@@@\@@@/@@@88\88888/88'
+        /\      \                  ,%&\%&&%&&%,@@@\@@@/@@@88\88888/88'
+    ___/  \__/\__\__               %&&%&%&/%&&%@@\@@/ /@@@88888\88888'    
+---/\___\ |''''''|__\-----         %&&%/ %&%%&&@@\ V /@@' `88\8 `/88'    
+   ||'''| |''||''|''|              `&%\ ` /%&'    |.|        \ '|8'
+   ``'''`'`''))''`''`''                |o|        | |         | |
+             ))                        |.|        | |         | |
+             ))                     \\/ ._\// _/__/  ,\_// __\\/.  \_// __/_ "
+   )
+
+random = rand(3);
+// write(random);
+locations = ["house","mountains","woods"];
+
+write("\n\nPlease make your choice:");
+write("\n\n0: House");
+write("\n1: Mountains");
+write("\n2: Woods");
+write("\n\nHe must be in the: ")
+input = read();
+
+// set the location of our Margay
+setLocation = fn(random){
+
+    if(random == 0){
+        here = locations[0];
+        return here;
+    }
+    if(random == 1){
+        here = locations[1];
+        return here;
+    }
+    if(random == 2){
+        here = locations[2];
+        return here;
+    }
+}
+
+// player's choice(number) to string
+choice = setLocation(input);
+
+write("\nYour choice: ");
+write("\n",input, ": He must be in the ", choice , ".");
+
+// Margay's location(number) to string
+here = setLocation(random);
+
+if(input == random){
+    write("\n\nYay! We found our Margay!");
+    write("
+                _                       
+                \`*-.                   
+                 )  _`-.                
+                .  : `. .               
+                : _   '  \              
+                ; *` _.   `*-._         
+                `-.-'          `-.      
+                  ;       `       `.    
+                  :.       .        \   
+                  . \  .   :   .-'   .  
+                  '  `+.;  ;  '      :  
+                  :  '  |    ;       ;-.
+                  ; '   : :`-:     _.`* ;
+               .*' /  .*' ; .*`- +'  `*'
+               `*-*   `*-*  `*-*'  
+    \n")
+} else{
+    write("\n\nOh, our Margay is not here T.T...\n");
+}

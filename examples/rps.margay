@@ -1,0 +1,135 @@
+// Rock Paper Scissors
+
+rock = fn() {
+    write("\n> rock");
+    write("
+        _______
+    ---'   ____)
+         (_____)
+         (_____)
+          (____)
+    ---.__(___)\n");
+}
+
+paper = fn() {
+    write("\n> paper");
+    write("
+        _______
+    ---'   ____)____
+              ______)
+             _______)
+            _______)
+    ---.__________)\n")
+}
+
+scissors = fn() {
+    write("\n> scissors");
+    write("
+        _______
+    ---'   ____)____
+              ______)
+          __________)
+          (____)
+    ---.__(___)\n")
+}
+
+won = fn() {
+    write("\nCongratulations! You won!\n");
+}
+
+lost = fn() {
+    write("\nYou lost.\n");
+}
+
+tie = fn() {
+    write("\nIt's tie!\n");
+}
+
+choiceArr = [rock, paper, scissors]
+
+// function to convert the player's choice(a number) into an output.
+numberToChoice = fn(input){
+    if(input == 0){
+        choiceArr[0]();
+    }
+    if(input == 1){
+        choiceArr[1]();
+    }
+    if(input == 2){
+        choiceArr[2]();
+    }
+}
+
+write("\nWelcome to the rock-paper-scissors game!");
+write("\n\nPlease make your choice:");
+write("\n0: rock");
+write("\n1: paper");
+write("\n2: scissors");
+
+write("\n\nMy choice: ")
+input = read()
+write("\n\nYour choice: ");
+numberToChoice(input);
+
+// random generation of computer's choice
+computerChoice = rand(3);
+
+// if computer's choice is rock
+if(computerChoice == 0){
+
+    write("\nComputer choice: ");
+    numberToChoice(computerChoice);
+    write("\n\nResult:");
+
+    if(input == 0){
+        tie();
+    }
+
+    if(input == 1){
+        won();
+    }
+
+    if(input == 2){
+        lost();
+    } 
+}
+
+// if computer's choice is paper
+if(computerChoice == 1){
+
+    write("\nComputer choice: ");
+    numberToChoice(computerChoice);
+    write("\n\nResult:");
+
+    if(input == 0){
+        lost()l
+    }
+
+    if(input == 1){
+        tie();
+    }
+
+    if(input == 2){
+        won();
+    }
+}
+
+// if computer's choice is paper
+if(computerChoice == 2){
+
+    write("\nComputer choice: ");
+    numberToChoice(computerChoice);
+    write("\n\nResult:");
+
+    if(input == 0){
+        won();
+    }
+
+    if(input == 1){
+        lost();
+    }
+
+    if(input == 2){
+        tie();
+    } 
+}

@@ -1,0 +1,38 @@
+// array
+arr = ["faf", 3.14, 203, true];
+arr = pop(arr, 1); // ["faf", 203, true]
+arr = push(arr, "team 11", 2);
+// ["faf", 203, "team 11" , true]
+
+str = "";
+i = 0;
+for(i < len(arr) - 1) {
+    str = str + arr[i] + " ";
+    i = i + 1;
+}
+
+write(str, "\n"); // faf 203 team 11
+
+// closure
+getPower = fn(n) {
+    
+    return fn(x) {
+        p = 1;
+        i = 0;
+        
+        for (i < n) {
+            p = p * x;
+            i = i + 1;
+        }
+
+        return p;
+    }
+}
+
+powTwo = getPower(2);
+powThree = getPower(3);
+
+b = powTwo(5);
+a = powThree(2);
+
+write(b + a * a, "\n");

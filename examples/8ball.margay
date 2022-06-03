@@ -1,0 +1,59 @@
+n = rand(8);
+
+write("\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+write("\n Welcome to the great wizard!")
+write("\n Here you have the chance to find the answer to your questions.")
+write("\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+
+write("\n\nPlease, enter your question:\n");
+
+input = read();
+
+write("\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+write("\n You shake the magic ball...");
+write("\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+
+write("\n\n .-'''-.");
+write("\n/       \ ");
+write("\n|  (8)  |");
+write("\n\       /");
+write("\n '-...-'");
+
+
+write("\n\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+write("\n Magic is happening...")
+write("\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+
+write("\n\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+write("\n The cloudy liquid swirls, and a reply comes into view...")
+write("\n~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~ ~*~")
+
+write("\n\nYour question was: ", input)
+write("\n\nThe magic ball says:")
+
+if(n == 0){
+    write("\nYes, for sure!");
+}
+if(n == 1){
+    write("\nProbably yes.");
+}
+if(n == 2){
+    write("\nSeems like yes...");
+}
+if(n == 3){
+    write("\nDefinitely not!");
+}
+if(n == 4){
+    write("\nProbably not.");
+}
+if(n == 5){
+    write("\nI really doubt it...");
+}
+if(n == 6){
+    write("\nNot sure, check back later!");
+}
+if(n == 7){
+    write("\nI really can't tell.");
+}
+
+write("\n")

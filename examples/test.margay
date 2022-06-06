@@ -14,25 +14,12 @@ for(i < len(arr) - 1) {
 write(str, "\n"); // faf 203 team 11
 
 // closure
-getPower = fn(n) {
-    
-    return fn(x) {
-        p = 1;
-        i = 0;
-        
-        for (i < n) {
-            p = p * x;
-            i = i + 1;
-        }
-
-        return p;
+greet = fn(greeting) {
+    return fn(name) {
+        write(greeting + " " + name + "!\n");
     }
 }
 
-powTwo = getPower(2);
-powThree = getPower(3);
-
-b = powTwo(5);
-a = powThree(2);
-
-write(b + a * a, "\n");
+sayHi = greet("Hi");
+sayHi("Madalina");
+sayHi("Valeria");

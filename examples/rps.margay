@@ -102,7 +102,7 @@ if(computerChoice == 1){
     write("\n\nResult:");
 
     if(input == 0){
-        lost()l
+        lost();
     }
 
     if(input == 1){
